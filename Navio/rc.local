@@ -16,6 +16,9 @@ _IP=$(hostname -I) || true
 if [ "$_IP" ]; then
   printf "My IP address is %s\n" "$_IP"
 fi
+
+#Change ArduCopter-quad to the relevant Navio APM executable.
+
 #For USB connection
 sudo ArduCopter-quad -C /dev/ttyUSB0 > /home/pi/ard_log &
 #For UART connection
