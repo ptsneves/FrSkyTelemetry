@@ -309,7 +309,7 @@ end
 
 local function drawAltitude(x, y)
 	local altitude = getValue("altitude")
-    lcd.drawText(x, y + 5, "Bar Alt", SMLSIZE)
+    lcd.drawText(x, y + 5, "B.Alt", SMLSIZE)
     lcd.drawNumber(x + 36, y, altitude, MIDSIZE)
     local t = lcd.getLastPos() + 1
     lcd.drawText(t, y + 5, "m", SMLSIZE)
@@ -442,7 +442,7 @@ local function drawBottomPanel()
         lcd.drawText(2, 55, "System NOT armed", INVERS)
       end
       lcd.drawText(lcd.getLastPos() + 10, 55, "Hdg:", INVERS)
-      lcd.drawNumber(lcd.getLastPos() + 10, 55, getHeading(), INVERS)
+      lcd.drawNumber(lcd.getLastPos() + 16, 55, getHeading(), INVERS)
     end
 end
     
