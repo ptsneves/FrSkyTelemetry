@@ -79,7 +79,8 @@ frksky_telemetry_obj:=$(patsubst %.cpp, %.o, $(frksky_telemetry_src))
 	$(CC) $(CPPFLAGS) $(ACFLAGS) $(INC_PARAMS) $^ -o $@ 
 
 clean:
-	find $(PROJECT_DIRECTORY) -type f -name "*.d" -o -name "*.o" -o -name "*.a" | xargs rm -f
+	find $(PROJECT_DIRECTORY) -type f -name "*.d" -o -name "*.o" -o -name "*.a"  \
+		-o -name "*.hex" -o -name "*.zip" | xargs rm -f
 
 /tmp/frsky_telemetry.elf: CC:=$(AVR_CC)
 /tmp/frsky_telemetry.elf: CPPFLAGS:=$(AVR_CPPFLAGS)
@@ -98,5 +99,9 @@ frsky_telemetry.hex: /tmp/frsky_telemetry.elf
 	
 upload_frsky_telemetry: frsky_telemetry.hex
 	$(AVRDUDE) $(AVRDUDE_FLAGS) $(AVRDUDE_WRITE_FLASH)$<:i
+
+frsky_telemetry.zip: frsky_telemetry.hex
+	git archive -o frsky_telemetry.zip -9 HEAD
+
 
 all: upload_frsky_telemetry
