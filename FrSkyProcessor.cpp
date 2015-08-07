@@ -106,7 +106,7 @@ void FrSkyProcessor::process(const MavlinkProcessor::MavlinkTelemetry& mav_telem
 					sendPackage(DATA_FRAME, FR_ID_VARIO, mav_telemetry.climb_rate);
 					break;
 				case 1:
-					sendPackage(DATA_FRAME, FR_ID_ALTITUDE, mav_telemetry.bar_altitude);
+					sendPackage(DATA_FRAME, FR_ID_ALTITUDE, mav_telemetry.bar_altitude * 100);
 					break;
 				default:
 					break; //unreachable
