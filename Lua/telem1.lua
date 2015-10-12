@@ -1,63 +1,63 @@
+----
+----  Copyright (c) Scott Simpson
+----
+---- 	This program is free software: you can redistribute it and/or modify
+----  it under the terms of the GNU General Public License as published by
+----  the Free Software Foundation, either version 3 of the License, or
+----  (at your option) any later version.
+----
+----  This program is distributed in the hope that it will be useful,
+----  but WITHOUT ANY WARRANTY; without even the implied warranty of
+----  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+----  GNU General Public License for more details.
+----
+----  A copy of the GNU General Public License is available at <http://www.gnu.org/licenses/>.
+----    
 --
---  Copyright (c) Scott Simpson
---
--- 	This program is free software: you can redistribute it and/or modify
---  it under the terms of the GNU General Public License as published by
---  the Free Software Foundation, either version 3 of the License, or
---  (at your option) any later version.
---
---  This program is distributed in the hope that it will be useful,
---  but WITHOUT ANY WARRANTY; without even the implied warranty of
---  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
---  GNU General Public License for more details.
---
---  A copy of the GNU General Public License is available at <http://www.gnu.org/licenses/>.
---    
-
 modelInfo = model.getInfo()
 modelName = modelInfo.name
-scriptDirectory = "/SCRIPTS/" .. modelName
-
-RIGHTPX = 212
-BOTTOMPX = 63
-
+--scriptDirectory = "/SCRIPTS/" .. modelName
+--
+--RIGHTPX = 212
+--BOTTOMPX = 63
+--
 FlightMode = {}
 Severity={}
 AsciiMap={}
 
 --Init A registers
-local A2 = model.getTelemetryChannel(1)
-if A2 .unit ~= 3 or A2 .range ~=1024 or A2 .offset ~=0
-then
-    A2.unit = 3
-    A2.range = 1024
-    A2.offset = 0
-    model.setTelemetryChannel(1, A2)
-end
+--local A2 = model.getTelemetryChannel(1)
+--if A2 .unit ~= 3 or A2 .range ~=1024 or A2 .offset ~=0
+--then
+--    A2.unit = 3
+--    A2.range = 1024
+--    A2.offset = 0
+--    model.setTelemetryChannel(1, A2)
+--end
 
-local A3 = model.getTelemetryChannel(2)
-if A3.unit ~= 3 or A3.range ~=362 or A3.offset ~=-180
-then
-    A3.unit = 3
-    A3.range = 362
-    A3.offset = -180
-    A3.alarm1 = -180
-    A3.alarm2 = -180
-    model.setTelemetryChannel(2, A3)
-end
-
-local A4 = model.getTelemetryChannel(3)
-if A4.unit ~= 3 or A4.range ~=362 or A4.offset ~=-180
-then
-    A4.unit = 3
-    A4.range = 362
-    A4.offset = -180
-    A4.alarm1 = -180
-    A4.alarm2 = -180
-    model.setTelemetryChannel(3, A4)
-end
-
-function initialize()
+--local A3 = model.getTelemetryChannel(2)
+--if A3.unit ~= 3 or A3.range ~=362 or A3.offset ~=-180
+--then
+--    A3.unit = 3
+--    A3.range = 362
+--    A3.offset = -180
+--    A3.alarm1 = -180
+--    A3.alarm2 = -180
+--    model.setTelemetryChannel(2, A3)
+--end
+--
+--local A4 = model.getTelemetryChannel(3)
+--if A4.unit ~= 3 or A4.range ~=362 or A4.offset ~=-180
+--then
+--    A4.unit = 3
+--    A4.range = 362
+--    A4.offset = -180
+--    A4.alarm1 = -180
+--    A4.alarm2 = -180
+--    model.setTelemetryChannel(3, A4)
+--end
+--
+local function initialize()
     local i
     
     for i=1, 17 do
@@ -125,9 +125,9 @@ function initialize()
     AsciiMap[25] ="Y"
     AsciiMap[26] ="Z"
 end
-    
-initialize()
-      
+
+  initialize()
+
 function char(c) 
     if c >= 48 and c <= 57 then
       return "0" + (c - 48)
@@ -147,12 +147,12 @@ end
 messageBuffer = ""
 messageBufferSize = 0
 previousMessageWord = 0
-footerMessage = ""
+footerMessage = "NO MESSAGE"
 messagePriority = -1
 
 function getTextMessage()
     local returnValue = ""
-    local messageWord = getValue("rpm")
+    local messageWord = getValue("RPM") /2 --correct for default blade number 1 in 2.1.*
 
     if messageWord ~= previousMessageWord then
         local highByte = bit32.rshift(messageWord, 7)
@@ -193,7 +193,7 @@ function getLatestMessage()
     end
     return messageArray[((messageNext - 1) % MESSAGEBUFFERSIZE) + 1]
 end
-
+--
 function checkForNewMessage()
     local msg = getTextMessage()
     if msg ~= "" then
@@ -279,25 +279,25 @@ end
 ----------------------------------------------------------------------------------------------------       
        
 local function drawBatteryVoltage(x,y)
-	local batteryVoltage=getValue("vfas")
-    lcd.drawNumber(x,y,batteryVoltage*10,MIDSIZE+PREC1)
+	local batteryVoltage=getValue("VFAS")
+    lcd.drawNumber(x,y,batteryVoltage, MIDSIZE+PREC1)
     lcd.drawText(lcd.getLastPos(),y+5,"V",SMLSIZE)
 end
 
 local function drawCurrent(x,y)
-	local current=getValue("current")
-    lcd.drawNumber(x,y,current*10,MIDSIZE+PREC1)
+	local current=getValue("Curr")
+    lcd.drawNumber(x,y,current,MIDSIZE+PREC1)
     lcd.drawText(lcd.getLastPos(),y+5,"A",SMLSIZE)
 end
 
 local function drawTotalCurrent(x,y)
-	local totalCurrent = getValue("consumption")
+	local totalCurrent = getValue("Tmp2")
     lcd.drawNumber(x, y, totalCurrent, MIDSIZE)
-    lcd.drawText(lcd.getLastPos(), y+5, "mAh", SMLSIZE)
+    lcd.drawText(lcd.getLastPos(), y+5, "% Bat", SMLSIZE)
 end
 
 local function drawSpeed(x,y)
-    local speed = getValue("gps-speed")
+    local speed = getValue("GSpd")
     lcd.drawText(x, y + 5, "Spd", SMLSIZE)
     lcd.drawNumber(x + 37, y, speed, MIDSIZE)
     local t = lcd.getLastPos() + 1
@@ -308,7 +308,7 @@ local function drawSpeed(x,y)
 end
 
 local function drawAltitude(x, y)
-	local altitude = getValue("altitude")
+	local altitude = getValue("Alt")
     lcd.drawText(x, y + 5, "B.Alt", SMLSIZE)
     lcd.drawNumber(x + 36, y, altitude, MIDSIZE)
     local t = lcd.getLastPos() + 1
@@ -325,7 +325,7 @@ local function drawDistance(x, y)
 end
 
 local function drawHdop(x,y)
-	local hdop = getValue("a2")			-- a2 is hdop*10
+	local hdop = getValue("A2") * 4 * 255/13.2 / 100 -- a2 is hdop*10
     if hdop > 99 then
         hdop = 99
         lcd.drawText(x-22, y+3, ">", SMLSIZE)  
@@ -337,7 +337,7 @@ local function drawHdop(x,y)
 end	
 
 local function drawSats(x, y)
-    local satValue = getValue("temp1")
+    local satValue = getValue("Tmp1")
     local numSats = (satValue - (satValue % 10)) /10
     local lock = satValue % 10
 
@@ -369,7 +369,7 @@ end
 --end
 
 local function getHeading()
-  return getValue("heading")
+  return getValue("Hdg")
   
 end
 
@@ -381,7 +381,7 @@ local function drawHeadingHud(x, y)
     local arrowSideAngle = 120
     --local headingHudInnerRadius = 16
     local headingHudOuterRadius = 15
-    local arming_state = getValue("accy")
+    local arming_state = getValue("AccY")
     
     if arming_state == 0 then
       armingHeading = getHeading()
@@ -410,32 +410,31 @@ end
 
 local function drawTopPanel()
     lcd.drawFilledRectangle(0, 0, 212, 9, 0)
-  
-    local flightModeNumber = getValue("fuel") + 1
+--  
+    local flightModeNumber = getValue("Fuel") + 1
     if flightModeNumber < 1 or flightModeNumber > 17 then
         flightModeNumber = 13
     end
-
     lcd.drawText(1, 1, FlightMode[flightModeNumber].Name, INVERS)
 
     lcd.drawTimer(lcd.getLastPos() + 10, 1, model.getTimer(0).value, INVERS)
 
     lcd.drawText(lcd.getLastPos() + 10, 1, "TX:", INVERS)
-    lcd.drawNumber(lcd.getLastPos() + 16, 1, getValue("tx-voltage")*10, 0+PREC1+INVERS)
+    lcd.drawNumber(lcd.getLastPos() + 16, 1, getValue("tx-voltage"), 0+PREC1+INVERS)
 
-    lcd.drawText(lcd.getLastPos(), 1, "v", INVERS)
+    lcd.drawText(lcd.getLastPos(), 1, "V", INVERS)
 
-    lcd.drawText(lcd.getLastPos() + 12, 1, "rssi:", INVERS)
-    lcd.drawNumber(lcd.getLastPos() + 10, 1, getValue("rssi"), 0+INVERS)
+    lcd.drawText(lcd.getLastPos() + 10, 1, "RSSI:", INVERS)
+    lcd.drawNumber(lcd.getLastPos() + 16, 1, getValue("RSSI"), 0+INVERS)
 end
-
+--
 local function drawBottomPanel()
     lcd.drawFilledRectangle(0, 54, 212, 63, 0)
     if getTime() < (messageLatestTimestamp + 1000) then
         local footerMessage = getLatestMessage()
         lcd.drawText(2, 55, footerMessage, INVERS)
     else
-      local arming_state = getValue("accy")
+      local arming_state = getValue("AccY")
       if arming_state ~= 0 then
         lcd.drawText(2, 55, "System ARMED", INVERS)
       else
@@ -445,20 +444,20 @@ local function drawBottomPanel()
       lcd.drawNumber(lcd.getLastPos() + 16, 55, getHeading(), INVERS)
     end
 end
-    
-local function background() 
-end
-
+--    
+--local function background() 
+--end
+--
 local function run(event)
     local loopStartTime = getTime()
     if loopStartTime > (lastTime + 50) then
         updateGroundDirection()
         lastTime = loopStartTime
     end 
-    
+
     lcd.clear()
     checkForNewMessage()
-    
+
     drawTopPanel()
     drawBottomPanel()
 
@@ -476,4 +475,6 @@ local function run(event)
     drawDistance(160, 40)	
 end
 
-return {run=run, background=background}
+
+return { run=run }
+--return {run=run, init=initialize, background=background}
