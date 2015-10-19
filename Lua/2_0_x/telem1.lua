@@ -12,7 +12,7 @@
 ----  GNU General Public License for more details.
 ----
 ----  A copy of the GNU General Public License is available at <http://www.gnu.org/licenses/>.
-----    
+----
 --
 modelInfo = model.getInfo()
 modelName = modelInfo.name
@@ -59,7 +59,6 @@ AsciiMap={}
 --
 local function initialize()
     local i
-    
     for i=1, 17 do
         FlightMode[i] = {}
         FlightMode[i].Name=""
@@ -82,7 +81,7 @@ local function initialize()
     FlightMode[15].Name="Flip Mode"
     FlightMode[16].Name="Auto Tune"
     FlightMode[17].Name="Position Hold"
-    
+
     for i=1,9 do
         Severity[i]={}
         Severity[i].Name=""
@@ -97,7 +96,7 @@ local function initialize()
     Severity[7].Name="Notice"
     Severity[8].Name="Info"
     Severity[9].Name="Debug"
-    
+
     AsciiMap[1] ="A"
     AsciiMap[2] ="B"
     AsciiMap[3] ="C"
@@ -126,15 +125,15 @@ local function initialize()
     AsciiMap[26] ="Z"
 end
 
-  initialize()
+initialize()
 
-function char(c) 
+function char(c)
     if c >= 48 and c <= 57 then
       return "0" + (c - 48)
     elseif c >= 65 and c <= 90 then
       return AsciiMap[c - 64]
-    elseif c >= 97 and c <= 122 then 
-      return AsciiMap[c - 96]    
+    elseif c >= 97 and c <= 122 then
+      return AsciiMap[c - 96]
     elseif c == 32 then
       return " "
     elseif c == 46 then
@@ -176,7 +175,7 @@ function getTextMessage()
           messageBuffer = ""
           messageBufferSize = 0
         end
-        previousMessageWord = messageWord        
+        previousMessageWord = messageWord
     end
     return returnValue
 end
@@ -209,24 +208,24 @@ function checkForNewMessage()
 end
 
 function getXYAtAngle(x, y, angle, length)
-	if angle < 0 then
-		angle = angle + 360
-	elseif angle >= 360 then
-		angle = angle - 360
-	end
-    local x2 = x + math.sin(math.rad(angle)) * length
-    local y2 = y - math.cos(math.rad(angle)) * length
-	return x2, y2
+  if angle < 0 then
+    angle = angle + 360
+  elseif angle >= 360 then
+    angle = angle - 360
+  end
+  local x2 = x + math.sin(math.rad(angle)) * length
+  local y2 = y - math.cos(math.rad(angle)) * length
+  return x2, y2
 end
 
 local function drawLineAtAngle(x, y, r1, r2, angle)
-    local xStart, yStart = getXYAtAngle(x, y, angle, r1)			
+    local xStart, yStart = getXYAtAngle(x, y, angle, r1)
     local xEnd, yEnd = getXYAtAngle(x, y, angle, r2)
     lcd.drawLine(xStart, yStart, xEnd, yEnd, SOLID, FORCE)
-end      
-      
----------------------------------------------------------------------------------------------------      
-      
+end
+
+---------------------------------------------------------------------------------------------------
+
 function getDirectionFromTo(fromLat, fromLon, toLat, toLon)
     if(fromLat == toLat and fromLon == toLon) then
         return -1
@@ -250,13 +249,13 @@ vehicleGroundDirection = -1
 function updateGroundDirection()
     local currentVehicleLat = getValue("latitude")
     local currentVehicleLon = getValue("longitude")
-    if currentVehicleLat~=0 and currentVehicleLon~=0 and previousVehicleLat2~=0 and previousVehicleLon2~=0 then 
+    if currentVehicleLat~=0 and currentVehicleLon~=0 and previousVehicleLat2~=0 and previousVehicleLon2~=0 then
         vehicleGroundDirection = getDirectionFromTo(previousVehicleLat2, previousVehicleLon2, currentVehicleLat, currentVehicleLon)
     end
     previousVehicleLat2 = previousVehicleLat1
-    previousVehicleLon2 = previousVehicleLon1      
+    previousVehicleLon2 = previousVehicleLon
     previousVehicleLat1 = currentVehicleLat
-    previousVehicleLon1 = currentVehicleLon  
+    previousVehicleLon1 = currentVehicleLon
 end
 
 function getVehicleGroundDirection()
@@ -264,20 +263,19 @@ function getVehicleGroundDirection()
 end
 
 function getDirectionToVehicle()
-	local directionToVehicle = -1
-	local pilotlat = getValue("pilot-latitude")
-	local pilotlon = getValue("pilot-longitude")
-	local curlat = getValue("latitude")
-	local curlon = getValue("longitude")
+  local directionToVehicle = -1
+  local pilotlat = getValue("pilot-latitude")
+  local pilotlon = getValue("pilot-longitude")
+  local curlat = getValue("latitude")
+  local curlon = getValue("longitude")
 
-	if pilotlat~=0 and curlat~=0 and pilotlon~=0 and curlon~=0 then 
-        directionToVehicle = getDirectionFromTo(pilotlat, pilotlon, curlat, curlon)
-	end
-	return directionToVehicle
+  if pilotlat~=0 and curlat~=0 and pilotlon~=0 and curlon~=0 then
+    directionToVehicle = getDirectionFromTo(pilotlat, pilotlon, curlat, curlon)
+  end
+  return directionToVehicle
 end
-       
-----------------------------------------------------------------------------------------------------       
-       
+
+----------------------------------------------------------------------------------------------------
 local function drawBatteryVoltage(x,y)
 	local batteryVoltage=getValue("VFAS")
     lcd.drawNumber(x,y,batteryVoltage, MIDSIZE+PREC1)
@@ -328,13 +326,13 @@ local function drawHdop(x,y)
 	local hdop = getValue("A2") * 4 * 255/13.2 / 100 -- a2 is hdop*10
     if hdop > 99 then
         hdop = 99
-        lcd.drawText(x-22, y+3, ">", SMLSIZE)  
+        lcd.drawText(x-22, y+3, ">", SMLSIZE)
     end
 	lcd.drawNumber (x, y, hdop, PREC1 + MIDSIZE)
     local t = lcd.getLastPos() + 1
-    lcd.drawText(t, y, "hd", SMLSIZE)  
-    lcd.drawText(t, y + 6, "op", SMLSIZE)  
-end	
+    lcd.drawText(t, y, "hd", SMLSIZE)
+    lcd.drawText(t, y + 6, "op", SMLSIZE)
+end
 
 local function drawSats(x, y)
     local satValue = getValue("Tmp1")
@@ -343,7 +341,7 @@ local function drawSats(x, y)
 
     if lock == 3 then
         lcd.drawNumber(x + 6, y, numSats, MIDSIZE)
-        lcd.drawText(x + 7, y + 5, "sats", SMLSIZE)                  
+        lcd.drawText(x + 7, y + 5, "sats", SMLSIZE)
     elseif lock == 2 then
         lcd.drawText(x + 8, y, "2D", MIDSIZE)
     elseif lock == 1 then
@@ -355,13 +353,13 @@ end
 
 --local function getRelativeGroundDirection()
 --    local groundDirection = getVehicleGroundDirection()
---    if groundDirection >= 0 then 
+--    if groundDirection >= 0 then
 --        local headingToVehicle = getDirectionToVehicle()
 --        if headingToVehicle >= 0 then
 --            local relativeHeading = groundDirection - headingToVehicle
 --            if(relativeHeading < 0) then
 --                relativeHeading = relativeHeading + 360
---            end   
+--            end
 --			return relativeHeading
 --		end
 --	end
@@ -370,109 +368,106 @@ end
 
 local function getHeading()
   return getValue("Hdg")
-  
 end
 
 armingHeading = 0
 local function drawHeadingHud(x, y)
-    local arrowSide = 5
-    local arrowTail = 5
-    local arrowLength = 16
-    local arrowSideAngle = 120
-    --local headingHudInnerRadius = 16
-    local headingHudOuterRadius = 15
-    local arming_state = getValue("AccY")
-    
-    if arming_state == 0 then
-      armingHeading = getHeading()
-      relativeHeading = armingHeading
-    else
-      relativeHeading = getHeading() - armingHeading
-		end
-		
-		local xTail, yTail = getXYAtAngle(x, y, relativeHeading - 180, arrowTail)	
-		local xLeft, yLeft = getXYAtAngle(xTail, yTail, relativeHeading-arrowSideAngle, arrowSide)
-		local xRight, yRight = getXYAtAngle(xTail, yTail, relativeHeading+arrowSideAngle, arrowSide)
-		local xNose, yNose = getXYAtAngle(xTail, yTail, relativeHeading, arrowLength)
-		lcd.drawLine(xTail, yTail, xLeft, yLeft, SOLID, FORCE)
-		lcd.drawLine(xLeft, yLeft, xNose, yNose, SOLID, FORCE)
-		lcd.drawLine(xTail, yTail, xRight, yRight, SOLID, FORCE)
-		lcd.drawLine(xRight, yRight, xNose, yNose, SOLID, FORCE)
+  local arrowSide = 5
+  local arrowTail = 5
+  local arrowLength = 16
+  local arrowSideAngle = 120
+  --local headingHudInnerRadius = 16
+  local headingHudOuterRadius = 15
+  local arming_state = getValue("AccY")
+  if arming_state == 0 then
+    armingHeading = getHeading()
+    relativeHeading = armingHeading
+  else
+    relativeHeading = getHeading() - armingHeading
+  end
+
+  local xTail, yTail = getXYAtAngle(x, y, relativeHeading - 180, arrowTail)
+  local xLeft, yLeft = getXYAtAngle(xTail, yTail, relativeHeading-arrowSideAngle, arrowSide)
+  local xRight, yRight = getXYAtAngle(xTail, yTail, relativeHeading+arrowSideAngle, arrowSide)
+  local xNose, yNose = getXYAtAngle(xTail, yTail, relativeHeading, arrowLength)
+  lcd.drawLine(xTail, yTail, xLeft, yLeft, SOLID, FORCE)
+  lcd.drawLine(xLeft, yLeft, xNose, yNose, SOLID, FORCE)
+  lcd.drawLine(xTail, yTail, xRight, yRight, SOLID, FORCE)
+  lcd.drawLine(xRight, yRight, xNose, yNose, SOLID, FORCE)
 
 
-    if getValue("gps-speed") > 0 then
-        local relativeGroundDirection = vehicleGroundDirection		
-        drawLineAtAngle(x, y, 0, headingHudOuterRadius, relativeGroundDirection)
-    end
-	--drawCircle(x, y, headingHudInnerRadius)
-	--drawCircle(x, y, headingHudOuterRadius)
+  if getValue("gps-speed") > 0 then
+    local relativeGroundDirection = vehicleGroundDirection
+    drawLineAtAngle(x, y, 0, headingHudOuterRadius, relativeGroundDirection)
+  end
+  --drawCircle(x, y, headingHudInnerRadius)
+  --drawCircle(x, y, headingHudOuterRadius)
 end
 
 local function drawTopPanel()
-    lcd.drawFilledRectangle(0, 0, 212, 9, 0)
---  
-    local flightModeNumber = getValue("Fuel") + 1
-    if flightModeNumber < 1 or flightModeNumber > 17 then
-        flightModeNumber = 13
-    end
-    lcd.drawText(1, 1, FlightMode[flightModeNumber].Name, INVERS)
+  lcd.drawFilledRectangle(0, 0, 212, 9, 0)
+  --
+  local flightModeNumber = getValue("Fuel") + 1
+  if flightModeNumber < 1 or flightModeNumber > 17 then
+    flightModeNumber = 13
+  end
+  lcd.drawText(1, 1, FlightMode[flightModeNumber].Name, INVERS)
 
-    lcd.drawTimer(lcd.getLastPos() + 10, 1, model.getTimer(0).value, INVERS)
+  lcd.drawTimer(lcd.getLastPos() + 10, 1, model.getTimer(0).value, INVERS)
 
-    lcd.drawText(lcd.getLastPos() + 10, 1, "TX:", INVERS)
-    lcd.drawNumber(lcd.getLastPos() + 16, 1, getValue("tx-voltage"), 0+PREC1+INVERS)
+  lcd.drawText(lcd.getLastPos() + 10, 1, "TX:", INVERS)
+  lcd.drawNumber(lcd.getLastPos() + 16, 1, getValue("tx-voltage"), 0+PREC1+INVERS)
 
-    lcd.drawText(lcd.getLastPos(), 1, "V", INVERS)
+  lcd.drawText(lcd.getLastPos(), 1, "V", INVERS)
 
-    lcd.drawText(lcd.getLastPos() + 10, 1, "RSSI:", INVERS)
-    lcd.drawNumber(lcd.getLastPos() + 16, 1, getValue("RSSI"), 0+INVERS)
+  lcd.drawText(lcd.getLastPos() + 10, 1, "RSSI:", INVERS)
+  lcd.drawNumber(lcd.getLastPos() + 16, 1, getValue("RSSI"), 0+INVERS)
 end
 --
 local function drawBottomPanel()
-    lcd.drawFilledRectangle(0, 54, 212, 63, 0)
-    if getTime() < (messageLatestTimestamp + 1000) then
-        local footerMessage = getLatestMessage()
-        lcd.drawText(2, 55, footerMessage, INVERS)
+  lcd.drawFilledRectangle(0, 54, 212, 63, 0)
+  if getTime() < (messageLatestTimestamp + 1000) then
+    local footerMessage = getLatestMessage()
+    lcd.drawText(2, 55, footerMessage, INVERS)
+  else
+    local arming_state = getValue("AccY")
+    if arming_state ~= 0 then
+      lcd.drawText(2, 55, "System ARMED", INVERS)
     else
-      local arming_state = getValue("AccY")
-      if arming_state ~= 0 then
-        lcd.drawText(2, 55, "System ARMED", INVERS)
-      else
-        lcd.drawText(2, 55, "System NOT armed", INVERS)
-      end
-      lcd.drawText(lcd.getLastPos() + 10, 55, "Hdg:", INVERS)
-      lcd.drawNumber(lcd.getLastPos() + 16, 55, getHeading(), INVERS)
+      lcd.drawText(2, 55, "System NOT armed", INVERS)
     end
+    lcd.drawText(lcd.getLastPos() + 10, 55, "Hdg:", INVERS)
+    lcd.drawNumber(lcd.getLastPos() + 16, 55, getHeading(), INVERS)
+  end
 end
---    
---local function background() 
+--local function background()
 --end
 --
 local function run(event)
-    local loopStartTime = getTime()
-    if loopStartTime > (lastTime + 50) then
-        updateGroundDirection()
-        lastTime = loopStartTime
-    end 
+  local loopStartTime = getTime()
+  if loopStartTime > (lastTime + 50) then
+    updateGroundDirection()
+    lastTime = loopStartTime
+  end
 
-    lcd.clear()
-    checkForNewMessage()
+  lcd.clear()
+  checkForNewMessage()
 
-    drawTopPanel()
-    drawBottomPanel()
+  drawTopPanel()
+  drawBottomPanel()
 
-    drawBatteryVoltage(32, 12)
-    drawCurrent(32, 26)
-    drawTotalCurrent(32, 40)
+  drawBatteryVoltage(32, 12)
+  drawCurrent(32, 26)
+  drawTotalCurrent(32, 40)
 
-    drawSats(72, 40)	
-    drawHdop(130, 40)
-    
-    drawHeadingHud(107, 26)
-    
-    drawSpeed(159, 12)
-    drawAltitude(160, 26)
-    drawDistance(160, 40)	
+  drawSats(72, 40)
+  drawHdop(130, 40)
+
+  drawHeadingHud(107, 26)
+
+  drawSpeed(159, 12)
+  drawAltitude(160, 26)
+  drawDistance(160, 40)
 end
 
 

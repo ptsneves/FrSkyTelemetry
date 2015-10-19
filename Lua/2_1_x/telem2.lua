@@ -13,13 +13,12 @@
 --
 --  A copy of the GNU General Public License is available at <http://www.gnu.org/licenses/>.
 
-initialize()
-            
----------------------------------------------------------------------------------------------------      
-			
+
+--------------------------------------------------------------------------------------------------
+
 local function drawTopPanel()
     lcd.drawFilledRectangle(0, 0, 212, 9, 0)
-  
+
     local flightModeNumber = getValue("fuel") + 1
     if flightModeNumber < 1 or flightModeNumber > 17 then
         flightModeNumber = 13
@@ -30,7 +29,7 @@ local function drawTopPanel()
     lcd.drawTimer(lcd.getLastPos() + 10, 1, model.getTimer(0).value, INVERS)
 
     lcd.drawText(lcd.getLastPos() + 10, 1, "TX:", INVERS)
-    lcd.drawNumber(lcd.getLastPos() + 16, 1, getValue("tx-voltage")*10, 0+PREC1+INVERS)
+    lcd.drawNumber(lcd.getLastPos() + 16, 1, getValue("tx-voltage"), 0+PREC1+INVERS)
 
     lcd.drawText(lcd.getLastPos(), 1, "v", INVERS)
 
@@ -43,8 +42,8 @@ local function drawBottomPanel()
     lcd.drawFilledRectangle(0, 54, 212, 63, 0)
     lcd.drawText(2, 55, footerMessage, INVERS)
 end
-    
-local function background() 
+
+local function background()
 end
 
 local function run(event)
@@ -52,9 +51,9 @@ local function run(event)
     if loopStartTime > (lastTime + 100) then
         checkForNewMessage()
         lastTime = loopStartTime
-    end 
+    end
     checkForNewMessage()
-    
+
     lcd.clear()
     drawTopPanel()
     local i
@@ -64,6 +63,17 @@ local function run(event)
         lcd.drawText(1, row * 10 + 2, messageArray[(i % MESSAGEBUFFERSIZE) + 1], 0)
         row = row + 1
     end
+    local coords =  getValue("GPS")
+    if (type(coords) == "table") then
+      lcd.drawText(1, 55, "Latitude ", INVERS)
+      lcd.drawText(lcd.getLastPos(), 55, coords["lat"], INVERS)
+      lcd.drawText(lcd.getLastPos(), 55, "Longitude ", INVERS)
+      lcd.drawText(lcd.getLastPos(), 55, coords["lon"], INVERS)
+    else
+      lcd.drawText(1, 55, "No Longitude Sensor ", INVERS)
+      lcd.drawText(lcd.getLastPos() , 55, "No Latitude Sensor", INVERS)
+    end
+
 end
 
 return {run=run, background=background}
