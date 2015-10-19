@@ -132,16 +132,16 @@ void FrSkyProcessor::process(const MavlinkProcessor::MavlinkTelemetry& mav_telem
 					break;
 				case 1:        // Sends the ap_longitude value, setting bit 31 high
 					if (mav_telemetry.gps_longitude < 0)
-						latlong=((abs(mav_telemetry.gps_longitude) / 100) * 6)  | 0xC0000000;
+						latlong=(((mav_telemetry.gps_longitude) / -100) * 6) | 0xC0000000;
 					else
-						latlong=((abs(mav_telemetry.gps_longitude) / 100) * 6)  | 0x80000000;
+						latlong=(((mav_telemetry.gps_longitude) / 100) * 6) | 0x80000000;
 					sendPackage(DATA_FRAME, FR_ID_LATLONG, latlong);
 					break;
 				case 2:        // Sends the ap_latitude value, setting bit 31 low
 					if(mav_telemetry.gps_latitude < 0 )
-						latlong = ((abs(mav_telemetry.gps_latitude)/100) * 6) | 0x40000000;
+						latlong = (((mav_telemetry.gps_latitude)/-100) * 6) | 0x40000000;
 					else
-						latlong = ((abs(mav_telemetry.gps_latitude) / 100) * 6);
+						latlong = (((mav_telemetry.gps_latitude) / 100) * 6);
 					sendPackage(DATA_FRAME, FR_ID_LATLONG, latlong);
 					break;
 				case 3:
