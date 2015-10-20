@@ -252,7 +252,7 @@ local function drawCurrent(x,y)
 end
 
 local function drawTotalCurrent(x,y)
-  local totalCurrent = getValue("Tmp2")
+  local totalCurrent = getValue("AccX")
   lcd.drawNumber(x, y, totalCurrent, MIDSIZE)
   lcd.drawText(lcd.getLastPos(), y+5, "% Bat", SMLSIZE)
 end

@@ -172,7 +172,7 @@ void FrSkyProcessor::process(const MavlinkProcessor::MavlinkTelemetry& mav_telem
 					}
 					break;
 				case 2:
-					sendPackage(DATA_FRAME, FR_ID_T2, mav_telemetry.battery_remaining);
+					sendPackage(DATA_FRAME, FR_ID_ACCX, mav_telemetry.battery_remaining * 100);
 					break;
 				case 3:
 					sendPackage(DATA_FRAME, FR_ID_CUSTOM_MODE, mav_telemetry.custom_mode);
@@ -182,7 +182,6 @@ void FrSkyProcessor::process(const MavlinkProcessor::MavlinkTelemetry& mav_telem
 					break;
 				case 5:
 					sendPackage(DATA_FRAME, FR_ID_HEADING, mav_telemetry.heading * 100 );
-					break;
 					break;
 				default:
 					break;
