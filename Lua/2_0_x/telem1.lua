@@ -16,16 +16,16 @@
 --
 modelInfo = model.getInfo()
 modelName = modelInfo.name
---scriptDirectory = "/SCRIPTS/" .. modelName
---
---RIGHTPX = 212
---BOTTOMPX = 63
---
+scriptDirectory = "/SCRIPTS/" .. modelName
+
+RIGHTPX = 212
+BOTTOMPX = 63
+
 FlightMode = {}
 Severity={}
 AsciiMap={}
-
---Init A registers
+--
+----Init A registers
 --local A2 = model.getTelemetryChannel(1)
 --if A2 .unit ~= 3 or A2 .range ~=1024 or A2 .offset ~=0
 --then
@@ -34,7 +34,7 @@ AsciiMap={}
 --    A2.offset = 0
 --    model.setTelemetryChannel(1, A2)
 --end
-
+--
 --local A3 = model.getTelemetryChannel(2)
 --if A3.unit ~= 3 or A3.range ~=362 or A3.offset ~=-180
 --then
@@ -56,8 +56,8 @@ AsciiMap={}
 --    A4.alarm2 = -180
 --    model.setTelemetryChannel(3, A4)
 --end
---
-local function initialize()
+
+function initialize()
     local i
     for i=1, 17 do
         FlightMode[i] = {}
@@ -151,7 +151,7 @@ messagePriority = -1
 
 function getTextMessage()
     local returnValue = ""
-    local messageWord = getValue("RPM") /2 --correct for default blade number 1 in 2.1.*
+    local messageWord = getValue("rpm")
 
     if messageWord ~= previousMessageWord then
         local highByte = bit32.rshift(messageWord, 7)
@@ -253,7 +253,7 @@ function updateGroundDirection()
         vehicleGroundDirection = getDirectionFromTo(previousVehicleLat2, previousVehicleLon2, currentVehicleLat, currentVehicleLon)
     end
     previousVehicleLat2 = previousVehicleLat1
-    previousVehicleLon2 = previousVehicleLon
+    previousVehicleLon2 = previousVehicleLon1
     previousVehicleLat1 = currentVehicleLat
     previousVehicleLon1 = currentVehicleLon
 end
@@ -277,25 +277,25 @@ end
 
 ----------------------------------------------------------------------------------------------------
 local function drawBatteryVoltage(x,y)
-	local batteryVoltage=getValue("VFAS")
-    lcd.drawNumber(x,y,batteryVoltage, MIDSIZE+PREC1)
+	local batteryVoltage=getValue("vfas")
+    lcd.drawNumber(x,y,batteryVoltage*10, MIDSIZE+PREC1)
     lcd.drawText(lcd.getLastPos(),y+5,"V",SMLSIZE)
 end
 
 local function drawCurrent(x,y)
-	local current=getValue("Curr")
+	local current=getValue("current")
     lcd.drawNumber(x,y,current,MIDSIZE+PREC1)
     lcd.drawText(lcd.getLastPos(),y+5,"A",SMLSIZE)
 end
 
 local function drawTotalCurrent(x,y)
-	local totalCurrent = getValue("AccX")
+	local totalCurrent = getValue("accx")
     lcd.drawNumber(x, y, totalCurrent, MIDSIZE)
     lcd.drawText(lcd.getLastPos(), y+5, "% Bat", SMLSIZE)
 end
 
 local function drawSpeed(x,y)
-    local speed = getValue("GSpd")
+    local speed = getValue("gps-speed")
     lcd.drawText(x, y + 5, "Spd", SMLSIZE)
     lcd.drawNumber(x + 37, y, speed, MIDSIZE)
     local t = lcd.getLastPos() + 1
@@ -306,7 +306,7 @@ local function drawSpeed(x,y)
 end
 
 local function drawAltitude(x, y)
-	local altitude = getValue("Alt")
+	local altitude = getValue("altitude")
     lcd.drawText(x, y + 5, "B.Alt", SMLSIZE)
     lcd.drawNumber(x + 36, y, altitude, MIDSIZE)
     local t = lcd.getLastPos() + 1
@@ -323,7 +323,7 @@ local function drawDistance(x, y)
 end
 
 local function drawHdop(x,y)
-	local hdop = getValue("A2") * 4 * 255/13.2 / 100 -- a2 is hdop*10
+	local hdop = getValue("a2")
     if hdop > 99 then
         hdop = 99
         lcd.drawText(x-22, y+3, ">", SMLSIZE)
@@ -335,7 +335,7 @@ local function drawHdop(x,y)
 end
 
 local function drawSats(x, y)
-    local satValue = getValue("Tmp1")
+    local satValue = getValue("temp1")
     local numSats = (satValue - (satValue % 10)) /10
     local lock = satValue % 10
 
@@ -367,7 +367,7 @@ end
 --end
 
 local function getHeading()
-  return getValue("Hdg")
+  return getValue("heading")
 end
 
 armingHeading = 0
@@ -378,7 +378,7 @@ local function drawHeadingHud(x, y)
   local arrowSideAngle = 120
   --local headingHudInnerRadius = 16
   local headingHudOuterRadius = 15
-  local arming_state = getValue("AccY")
+  local arming_state = getValue("accy")
   if arming_state == 0 then
     armingHeading = getHeading()
     relativeHeading = armingHeading
@@ -407,7 +407,7 @@ end
 local function drawTopPanel()
   lcd.drawFilledRectangle(0, 0, 212, 9, 0)
   --
-  local flightModeNumber = getValue("Fuel") + 1
+  local flightModeNumber = getValue("fuel") + 1
   if flightModeNumber < 1 or flightModeNumber > 17 then
     flightModeNumber = 13
   end
@@ -416,12 +416,12 @@ local function drawTopPanel()
   lcd.drawTimer(lcd.getLastPos() + 10, 1, model.getTimer(0).value, INVERS)
 
   lcd.drawText(lcd.getLastPos() + 10, 1, "TX:", INVERS)
-  lcd.drawNumber(lcd.getLastPos() + 16, 1, getValue("tx-voltage"), 0+PREC1+INVERS)
+  lcd.drawNumber(lcd.getLastPos() + 16, 1, getValue("tx-voltage")*10, 0+PREC1+INVERS)
 
   lcd.drawText(lcd.getLastPos(), 1, "V", INVERS)
 
   lcd.drawText(lcd.getLastPos() + 10, 1, "RSSI:", INVERS)
-  lcd.drawNumber(lcd.getLastPos() + 16, 1, getValue("RSSI"), 0+INVERS)
+  lcd.drawNumber(lcd.getLastPos() + 16, 1, getValue("rssi"), 0+INVERS)
 end
 --
 local function drawBottomPanel()
@@ -430,7 +430,7 @@ local function drawBottomPanel()
     local footerMessage = getLatestMessage()
     lcd.drawText(2, 55, footerMessage, INVERS)
   else
-    local arming_state = getValue("AccY")
+    local arming_state = getValue("accy")
     if arming_state ~= 0 then
       lcd.drawText(2, 55, "System ARMED", INVERS)
     else
@@ -470,6 +470,4 @@ local function run(event)
   drawDistance(160, 40)
 end
 
-
-return { run=run }
---return {run=run, init=initialize, background=background}
+return {run=run, init=initialize, background=background}
