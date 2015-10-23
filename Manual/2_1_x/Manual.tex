@@ -26,23 +26,23 @@
 \setcounter{page}{1}
 \section{Context}
 
-This manual's goal is to get the Airborne Projects' "Mavlink to FrSky Smart Port Converter" working with OpenTX 2.1.X, where X is a version number higher than 3. To accomplish this, converters sold before 21 of October of 2015 need to have their firmware upgraded.
+This manual's goal is to get the Airborne Projects' "Mavlink to FrSky Smart Port Converter" working with OpenTX 2.1.X, where X is a version number higher or equal to 3. To accomplish this, converters sold before 21 of October of 2015 need to have their firmware upgraded.
 
 The reason the Mavlink Converters firmware needs to be upgraded is due to the way OpenTX 2.1.X version changed the telemetry system. Even so, most of the important functionality remains operational with the pre-October 21st firmware, just with LUA scripts upgrades.
 
-The firmware upgrade is not possible on the Mega's converter version because the USB-To-Serial chip needs to be disabled to work correctly with the APM Mega board. This is unfortunate and we provide a secondary workaround that involves flashing OpenTX to the firmware compiled from OpenTX repository master branch. This is because in versions up to 2.1.3 there was a bug in a sensor naming. Airborne Projects provided a patch to OpenTX which was accepted and merged with the upcoming 2.1.4 version of OpenTX.
+The firmware upgrade is not possible on the Mega's converter version because the USB-To-Serial chip needs to be disabled to work correctly with the APM Mega board. This is unfortunate and we provide a secondary workaround that involves flashing the Taranis with firmware compiled from the OpenTX repository master branch. This is because in versions up to 2.1.3 there was a bug in sensor naming. Airborne Projects provided a patch to OpenTX which was accepted and merged with the upcoming version of OpenTX.
 
 \section{Getting Started}
 
 This is a telemetry relay board that sits between the telemetry port of your APM or Pixhawk module and the Smart Port of your FrSky receiver sending your flight controller telemetry to your Taranis radio.
 
-\section{Parts}
+%\section{Parts}
 
-\begin{figure}[!h]
-	\centering
-	\includegraphics{Parts1.jpg}
-	\includegraphics{Parts 2 Cable.jpg}
-\end{figure}
+%\begin{figure}[!h]
+%	\centering
+%	\includegraphics{Parts1.jpg}
+%	\includegraphics{Parts 2 Cable.jpg}
+%\end{figure}
 
 \section{Assumptions}
 
@@ -54,8 +54,7 @@ to FrSky SmartPort Converter” through its Smart Port;
 \item A "MavLink to FrSky SmartPort Converter" module is connected to an APM telemetry
 output, specifically the native APM / Pixhawk telemetry port;
 
-\item The power to the "MavLink to FrSky SmartPort Converter" is supplied by the receiver’s
-Smart Port between 5 to 10V;
+\item The power to the "MavLink to FrSky SmartPort Converter" is supplied by the APM telemetry port;
 
 \item The "MavLink to FrSky SmartPort Converter" has the firmware recommended by Airborne
 Projects;
@@ -107,10 +106,10 @@ operating system;
 
 \begin{enumerate}
 
-\begin{figure}
+\begin{figure}[hb!]
 \centering
 \includegraphics{Taranis Schematic.png}
-
+\caption{Booloader mode}
 \end{figure}
 
 \item Ensure you have your Taranis transmitter turned off;
@@ -129,7 +128,7 @@ choose the one with the non-descriptive name. One way to spot it is that the one
 \item  In the root of the correct drive there should be several folders but you should find one
 called "Scripts". Don't exit this directory because you will past files to it.
 
-\item Inside the "SCRIPTS" directory you should have folder called "TELEMETRY" If you don't, create it and go inside it;
+\item Inside the "SCRIPTS" directory you should have another called "TELEMETRY" If you don't, create it and go inside it;
 
 \item  Unpack the downloaded .zip file mentioned in the Assumptions section to your desired location. This file contains the firmware source code, the converter HEX file as well as the Lua telemetry scripts;
 
@@ -141,7 +140,9 @@ called "Scripts". Don't exit this directory because you will past files to it.
 
 \item From the initial screen screen press "MENU" and then long press "PAGE" button to go to the "TELEMETRY" page.
 
-\item Scroll down the "TELEMETRY" page until you find the option "Discover new sensors". Toggling this option allows the radio to enable or disable new sensor discovery. For Airborne Projects' Mavlink Converter 17 sensors should be discovered, with no name repetitions. Stop the discovery.
+\item Scroll down the "TELEMETRY" page until you find the option "Discover new sensors". Toggling this option allows the radio to enable or disable new sensor discovery. For Airborne Projects' Mavlink Converter 17 sensors should be discovered, with no name repetitions.
+
+\item  Stop the discovery when 17 sensors are discovered.
 
 \item Scroll further down until you find the text "Screen 1". On "Screen 1" press "ENT" and with the "+" or "-" keys navigate the menu until you find the text "Script". When you find it press "ENT".
 
@@ -167,10 +168,10 @@ If you have a configuration problem that you cannot solve please let us know and
 
 \section{Loading new firmware into the Converter}
 
-This section only applies if the converter's firmware is from a later date than 21 of October and of the Pixhawk or Navio version.
+This section only applies if the converter's firmware is from a previous date than 21 of October and a Pixhawk or Navio version.
 
 \begin{enumerate}
-\item Disconnect the converter from any device including from the SmartPort plug and from the DF13 telemetry plug. This is very important.
+\item Disconnect the converter from any device including from the SmartPort plug and from the DF13 telemetry plug. \textbf{This is very important.}
 
 \item Connect the Mini USB plug to the Converter's USB port and wait for it to be recognized by Windows. It should be recognized as an Arduino.
 
@@ -181,6 +182,7 @@ This section only applies if the converter's firmware is from a later date than 
 \begin{figure}[h!]
 \centering
 \includegraphics[width=1.0\textwidth]{XLoader}
+\caption{XLoader configuration}
 \label{fig:xloader}
 \end{figure}
 
@@ -193,6 +195,7 @@ A good way to check if the update was successful is to see if the LED light blin
 \begin{figure}[h!]
 	\centering
 	\includegraphics{LCD Description}
+	\caption{LCD description}
 \end{figure}
 
 \begin{enumerate}
@@ -220,6 +223,7 @@ A good way to check if the update was successful is to see if the LED light blin
 \begin{figure}[h!]
         \centering
         \includegraphics[width=0.7\textwidth]{Assembled Converter}
+	\caption{Assembled Converter}
 \end{figure}
 
 \begin{enumerate}
@@ -253,9 +257,9 @@ For customer support, contact us at \url{info@airborneprojects.com}.
 
 \subsection{Problem}
 
-The original Airborne Projects Converter Firmware is not compatible with OpenTX 2.1.3 because one of sensor, namely "Battery remaining" is assigned the same identifier name as the Satellites visible sensor. This happens because in OpenTX 1.1.3 Frsky Sensor "Temp1" and "Temp2" are given the same "temp" identifier, causing an ambiguity. This breaks the way 2.0.X sensors were named, but most importantly breaks consistency with similar conventions like "A0", "A1", etc. To solve this problem Airbore Projects produced a patch that is already merged with the "master" branch of OpenTX and is due to be part of the next minor 2.1.X OpenTX version. This situation is out of Airborne Projects control and we cannot due anything about it. You can confirm the merging in OpenTX official repository at \url{https://github.com/opentx/opentx/pull/2955}
+The original Airborne Projects Converter Firmware is not compatible with OpenTX 2.1.3 because one of sensor, namely "Battery remaining" is assigned the same identifier name as the Satellites visible sensor. This happens because in OpenTX 2.1.3 Frsky Sensor "Temp1" and "Temp2" are given the same "temp" identifier, causing an ambiguity. This breaks the way 2.0.X sensors were named, but most importantly breaks consistency with similar conventions like "A0", "A1", etc. To solve this problem Airborne Projects produced a patch that is already merged with the "master" branch of OpenTX and is due to be part of the next minor 2.1.X OpenTX version. This situation is out of Airborne Projects control and we cannot do anything about it. You can confirm the merging in OpenTX official repository at \url{https://github.com/opentx/opentx/pull/2955}
 
-The converters firmware cannot be upgraded because the way the APM Mega Serial multiplexer interacts with the CH340 USB-to-Serial requires us to cut it's traces and remove some resistors, effectively making it non-reprogramable without hardware modifications. As the scripts have no way of knowing which sensor is which only an upgrade to the Taranis Plus firmware can solve this problem.
+The converters firmware cannot be upgraded because the way the APM Mega Serial multiplexer interacts with the CH340 USB-to-Serial requiring us to cut it's traces and remove some resistors, effectively making it non-reprogramable without hardware modifications. As the scripts have no way of knowing which sensor is which only an upgrade to the Taranis Plus firmware can solve this problem.
 
 \subsection{Patched OpenTX Firmware}
 
