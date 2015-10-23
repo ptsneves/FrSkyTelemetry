@@ -102,6 +102,7 @@ upload_frsky_telemetry: frsky_telemetry.hex
 
 frsky_telemetry.zip: frsky_telemetry.hex
 	git archive -o frsky_telemetry.zip -9 HEAD
+	zip -g frsky_telemetry.zip frsky_telemetry.hex
 
 
 all: upload_frsky_telemetry
