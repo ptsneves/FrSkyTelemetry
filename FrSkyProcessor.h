@@ -3,7 +3,6 @@
 
 #include <Arduino.h>
 #include "MavlinkProcessor.h"
-#include "SoftwareSerial/SoftwareSerial.h"
 
 void frsky_send_text_message(char *msg);
 
@@ -21,7 +20,6 @@ private:
 	void sendCrc();
 	void sendPackage(uint8_t header, uint16_t id, uint32_t value);
 
-	SoftwareSerial softSerial;
 	uint8_t fault_pin;
 
 	short crc; // used for crc calc of frsky-packet

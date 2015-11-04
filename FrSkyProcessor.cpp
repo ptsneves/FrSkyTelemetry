@@ -73,7 +73,6 @@ uint16_t telem_text_get_word() {                                                
 
 // ***********************************************************************
 FrSkyProcessor::FrSkyProcessor(const SerialId& serial_pin, uint8_t fault_pin) :
-	softSerial{serial_pin, serial_pin, true},
 	fault_pin{fault_pin},
 	crc{0}, // used for crc calc of frsky-packet
 	lastRx{0},
@@ -83,20 +82,23 @@ FrSkyProcessor::FrSkyProcessor(const SerialId& serial_pin, uint8_t fault_pin) :
 	misc_index{0},
 	serial_id{serial_pin} {
 
-	softSerial.begin(BAUD_RATE);
+	Serial1.begin(BAUD_RATE);
+	UART0_C3 = 0x10;
+	UART0_C1 = 0xA0;
+	UART0_S1 = 0x10;
 	//frsky_send_text_message("Telemetry Started");
 }
 
 FrSkyProcessor::~FrSkyProcessor() {
-	//delete softSerial;
+	//delete Serial1;
 }
 
 void FrSkyProcessor::process(const MavlinkProcessor::MavlinkTelemetry& mav_telemetry, bool new_data) {
 	uint8_t data = 0;
 
 
-	while (softSerial.available())	{
-		data = softSerial.read();
+	while (Serial1.available())	{
+		data = Serial1.read();
 		if (lastRx == START_STOP) {
 			if (new_data == true)
 				digitalWrite(fault_pin, HIGH);
@@ -195,16 +197,16 @@ void FrSkyProcessor::process(const MavlinkProcessor::MavlinkTelemetry& mav_telem
 
 void FrSkyProcessor::sendByte(uint8_t byte) {
 	if(byte == 0x7E) {
-		softSerial.write(0x7D);
-		softSerial.write(0x5E);
+		Serial1.write(0x7D);
+		Serial1.write(0x5E);
 	}
 	else if(byte == 0x7D) {
-		softSerial.write(0x7D);
-		softSerial.write(0x5D);
+		Serial1.write(0x7D);
+		Serial1.write(0x5D);
 	} else {
-		softSerial.write(byte);
+		Serial1.write(byte);
 	}
-	//softSerial.write(byte);
+	//Serial1.write(byte);
 	// CRC update
 	crc += byte;         //0-1FF
 	crc += crc >> 8;   //0-100
@@ -214,7 +216,7 @@ void FrSkyProcessor::sendByte(uint8_t byte) {
 }
 
 void FrSkyProcessor::sendCrc() {
-	softSerial.write(0xFF-crc);
+	Serial1.write(0xFF-crc);
 	crc = 0;          // CRC reset
 }
 
@@ -231,7 +233,7 @@ void FrSkyProcessor::sendPackage(uint8_t header, uint16_t id, uint32_t value) {
 	sendByte(bytes[2]);
 	sendByte(bytes[3]);
 	sendCrc();
-	softSerial.flush();
+	Serial1.flush();
 	pinMode(serial_id, INPUT);
 	digitalWrite(fault_pin, LOW);
 

@@ -15,7 +15,7 @@ void __cxa_pure_virtual() {
 
 int main() {
 	uint8_t led_pin = 13;
-	init();
+	//init();
 
 	FrSkyProcessor frsky_processor(FrSkyProcessor::SOFT_SERIAL_PIN_2, led_pin);
 	MavlinkProcessor mavlink_processor{};
@@ -28,7 +28,7 @@ int main() {
     // Check FrSky S.Port communication
 		frsky_processor.process(mavlink_processor.getGatheredTelemetry(), mavlink_processor.isConnected());
 
-		if (serialEventRun) serialEventRun();
+
 	}
 	return 0; //unreachable
 }
