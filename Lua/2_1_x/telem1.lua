@@ -247,7 +247,7 @@ end
 
 local function drawCurrent(x,y)
   local current=getValue("Curr")
-  lcd.drawNumber(x,y,current,MIDSIZE+PREC1)
+  lcd.drawNumber(x,y,current, MIDSIZE+PREC1)
   lcd.drawText(lcd.getLastPos(),y+5,"A",SMLSIZE)
 end
 
@@ -298,11 +298,19 @@ local function drawDistance(x, y)
     local long_dist = math.abs(arming_coords["lon"] - coords["lon"]) * EARTH_RADIUS
     long_dist = long_dist * long_dist
     distance = math.sqrt(lat_dist + long_dist + getValue("Alt") * getValue("Alt"))
-    lcd.drawText(x + 5, y, distance, PREC1+MIDSIZE)
-    local t = lcd.getLastPos() + 1
-    lcd.drawText(t, y + 5, "m", SMLSIZE)
-  else
-    lcd.drawText(lcd.getLastPos() + 6, y +5, "None", SMLSIZE)
+    if distance >= 100.0 then
+      distance = distance / 1000.0
+      lcd.drawNumber(x + 36, y, distance, MIDSIZE + PREC1)
+      local t = lcd.getLastPos() + 1
+      lcd.drawText(t, y + 5, "Km", SMLSIZE)
+    else
+      lcd.drawNumber(x + 36, y, distance, MIDSIZE + PREC1)
+      local t = lcd.getLastPos() + 1
+      lcd.drawText(t, y + 5, "m", SMLSIZE)
+    end
+else
+    local t = lcd.getLastPos() + 3
+    lcd.drawText(t, y + 5, "None  ", SMLSIZE)
   end
 end
 
@@ -322,8 +330,7 @@ local function drawSats(x, y)
   local satValue = getValue("Tmp1")
   local numSats = (satValue - (satValue % 10)) /10
   local lock = satValue % 10
-
-  if lock == 3 then
+  if lock >= 3 then
     lcd.drawNumber(x + 6, y, numSats, MIDSIZE)
     lcd.drawText(x + 7, y + 5, "sats", SMLSIZE)
   elseif lock == 2 then
