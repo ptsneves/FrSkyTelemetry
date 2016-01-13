@@ -49,7 +49,7 @@ AVR_NM:=avr-nm
 AVRDUDE:=avrdude
 AVRDUDE_MCU:=ATmega328p
 AVRDUDE_WRITE_FLASH = -U flash:w:
-AVRDUDE_FLAGS = -q -D -V -F \
+AVRDUDE_FLAGS = -q -D -F \
     -p $(AVRDUDE_MCU) -P $(port) -c $(upload_protocol) \
     -b $(upload_speed) -C $(arduino_dir)hardware/tools/avrdude.conf
 
