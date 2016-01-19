@@ -240,7 +240,7 @@ end
 ----------------------------------------------------------------------------------------------------
 
 local function drawBatteryVoltage(x,y)
-  local batteryVoltage=getValue("VFAS")
+  local batteryVoltage=getValue("VFAS") * 10
   lcd.drawNumber(x,y,batteryVoltage, MIDSIZE+PREC1)
   lcd.drawText(lcd.getLastPos(),y+5,"V",SMLSIZE)
 end
