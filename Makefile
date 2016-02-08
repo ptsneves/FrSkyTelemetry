@@ -1,5 +1,5 @@
 frksky_telemetry_mkfile_dir:=$(dir $(lastword $(MAKEFILE_LIST)))
-
+SHELL = /bin/bash
 PROJECT_DIRECTORY:=$(shell git rev-parse --show-toplevel)
 port:=/dev/ttyUSB0
 upload_speed:=57600
@@ -102,6 +102,7 @@ upload_frsky_telemetry: frsky_telemetry.hex
 
 frsky_telemetry.zip: frsky_telemetry.hex
 	git archive -o frsky_telemetry.zip -9 HEAD
+	pushd Manual/2_1_x/; pdflatex Manual.tex; popd
 	zip -g frsky_telemetry.zip frsky_telemetry.hex Manual/2_1_x/Manual.pdf
 
 
