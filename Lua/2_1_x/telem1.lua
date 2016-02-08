@@ -246,7 +246,7 @@ local function drawBatteryVoltage(x,y)
 end
 
 local function drawCurrent(x,y)
-  local current=getValue("Curr")
+  local current=getValue("Curr") * 10
   lcd.drawNumber(x,y,current, MIDSIZE+PREC1)
   lcd.drawText(lcd.getLastPos(),y+5,"A",SMLSIZE)
 end
@@ -315,12 +315,12 @@ else
 end
 
 local function drawHdop(x,y)
-  local hdop = getValue("A2") * 4 * 255/13.2 / 100 -- a2 is hdop*10
-  if hdop > 99 then
-    hdop = 99
-    lcd.drawText(x-22, y+3, ">", SMLSIZE)
+  local hdop = getValue("A2") * 4 * 255/13.2 / 100
+  if hdop > 9.9 then
+    --hdop = 9.9*10
+    lcd.drawText(x-24, y+3, ">", SMLSIZE)
   end
-  lcd.drawNumber (x, y, hdop, PREC1 + MIDSIZE)
+  lcd.drawNumber (x, y, hdop * 10, PREC1 + MIDSIZE)
   local t = lcd.getLastPos() + 1
   lcd.drawText(t, y, "hd", SMLSIZE)
   lcd.drawText(t, y + 6, "op", SMLSIZE)

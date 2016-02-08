@@ -19,7 +19,7 @@
 local function drawTopPanel()
     lcd.drawFilledRectangle(0, 0, 212, 9, 0)
 
-    local flightModeNumber = getValue("fuel") + 1
+    local flightModeNumber = getValue("Fuel") + 1
     if flightModeNumber < 1 or flightModeNumber > 17 then
         flightModeNumber = 13
     end
@@ -61,7 +61,7 @@ local function run(event)
     for i = messageFirst, messageNext - 1, 1 do
 --            lcd.drawText(1, row * 10 + 2, "abc " .. i .. " " .. messageFirst .. " " .. messageNext, 0)
         lcd.drawText(1, row * 10 + 2, messageArray[(i % MESSAGEBUFFERSIZE) + 1], 0)
-        row = row + 1
+        row = (row + 1) % 5
     end
     local coords =  getValue("GPS")
     if (type(coords) == "table") then
