@@ -101,64 +101,42 @@ void FrSkyProcessor::process(const MavlinkProcessor::MavlinkTelemetry& mav_telem
 			if (new_data == true)
 				digitalWrite(fault_pin, HIGH);
 			if (data == SENSOR_ID_VARIO) {
-				switch(++variometer_index % variometer_sensor_max) {
+				uint32_t latlong = 0;
+				switch(++variometer_index % 15) {
 				case 0:
 					sendPackage(DATA_FRAME, FR_ID_VARIO, mav_telemetry.climb_rate);
 					break;
 				case 1:
 					sendPackage(DATA_FRAME, FR_ID_ALTITUDE, mav_telemetry.bar_altitude * 100);
 					break;
-				default:
-					break; //unreachable
-				}
-			}
-			else if (data == SENSOR_ID_FAS) {
-				switch(++vfas_index % vfas_sensor_max) {
-					case 0:
+				case 2:
 						sendPackage(DATA_FRAME, FR_ID_VFAS, mav_telemetry.battery_voltage);
 						break;
-					case 1:
+				case 3:
 						sendPackage(DATA_FRAME, FR_ID_CURRENT, mav_telemetry.battery_current);
-						break;
-					default:
-						break; //unreachable
-				}
-			}
-			else if (data == SENSOR_ID_GPS) {
-				uint32_t latlong = 0;
-				switch(++gps_index % gps_sensor_max) {
-				case 0:
+					break;
+				case 4:
 						sendPackage(DATA_FRAME, FR_ID_SPEED, mav_telemetry.groundspeed * 36 );  // from GPS converted to km/h
 					break;
-				case 1:        // Sends the ap_longitude value, setting bit 31 high
+				case 5: // Sends the ap_longitude value, setting bit 31 high
 					if (mav_telemetry.gps_longitude < 0)
 						latlong=(((mav_telemetry.gps_longitude) / -100) * 6) | 0xC0000000;
 					else
 						latlong=(((mav_telemetry.gps_longitude) / 100) * 6) | 0x80000000;
 					sendPackage(DATA_FRAME, FR_ID_LATLONG, latlong);
 					break;
-				case 2:        // Sends the ap_latitude value, setting bit 31 low
+				case 6: // Sends the ap_latitude value, setting bit 31 low
 					if(mav_telemetry.gps_latitude < 0 )
 						latlong = (((mav_telemetry.gps_latitude)/-100) * 6) | 0x40000000;
 					else
 						latlong = (((mav_telemetry.gps_latitude) / 100) * 6);
 					sendPackage(DATA_FRAME, FR_ID_LATLONG, latlong);
 					break;
-				case 3:
+				case 7:
 					sendPackage(DATA_FRAME, FR_ID_GPS_ALT, mav_telemetry.gps_altitude / 10); // from GPS,  100=1m
 					break;
-				default:
-					break; //unreachable
-				}
-			}
-			else if (data == SENSOR_ID_RPM) {
-				uint16_t data_word;
-				data_word = telem_text_get_word();
-				sendPackage(DATA_FRAME, FR_ID_RPM, data_word);
-			}
-			else if (data == SENSOR_ID_SP2UH || data == SENSOR_ID_SP2UR) {
-				switch(++misc_index % misc_sensor_max) {
-				case 0: {
+				case 8:
+				{
 						int16_t hdop_val;
 						hdop_val = mav_telemetry.gps_hdop / 4;
 						if(hdop_val > 249)
@@ -166,22 +144,30 @@ void FrSkyProcessor::process(const MavlinkProcessor::MavlinkTelemetry& mav_telem
 						sendPackage(DATA_FRAME, FR_ID_ADC2, hdop_val); //  value must be between 0 and 255.  1 produces 0.4
 					}
 					break;
-				case 1: {
+				case 9:
+				{
 						int32_t gps_status = (mav_telemetry.gps_satellites_visible * 10) + mav_telemetry.gps_fixtype;
 						sendPackage(DATA_FRAME, FR_ID_T1, gps_status);
 					}
 					break;
-				case 2:
+				case 10:
 					sendPackage(DATA_FRAME, FR_ID_ACCX, mav_telemetry.battery_remaining * 100);
 					break;
-				case 3:
+				case 11:
 					sendPackage(DATA_FRAME, FR_ID_CUSTOM_MODE, mav_telemetry.custom_mode);
 					break;
-				case 4:
+				case 12:
 					sendPackage(DATA_FRAME, FR_ID_ACCY,  mav_telemetry.base_mode & MAV_MODE_FLAG_SAFETY_ARMED);
 					break;
-				case 5:
+				case 13:
 					sendPackage(DATA_FRAME, FR_ID_HEADING, mav_telemetry.heading * 100 );
+					break;
+				case 14:
+				{
+					uint16_t data_word;
+					data_word = telem_text_get_word();
+					sendPackage(DATA_FRAME, FR_ID_RPM, data_word);
+				}
 					break;
 				default:
 					break;
@@ -234,5 +220,4 @@ void FrSkyProcessor::sendPackage(uint8_t header, uint16_t id, uint32_t value) {
 	softSerial.flush();
 	pinMode(serial_id, INPUT);
 	digitalWrite(fault_pin, LOW);
-
 }

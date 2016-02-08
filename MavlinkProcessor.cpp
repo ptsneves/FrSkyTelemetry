@@ -76,9 +76,9 @@ const unsigned long& MavlinkProcessor::getLastHeartbeat() const {
 }
 
 void MavlinkProcessor::receiveTelemetry() {
-
+	uint32_t next_timeout = millis() + 6;
 	tryToConnectToAPM();
-	while(MavLinkSerial.available()) {
+	while(MavLinkSerial.available() && millis() < next_timeout){
 		uint8_t c = MavLinkSerial.read();
 		if(mavlink_parse_char(MAVLINK_COMM_0, c, &msg, &status)) {
 			switch(msg.msgid)	{
