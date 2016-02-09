@@ -23,7 +23,7 @@ avr_core_src_c:=wiring.c \
 
 avr_core_src_cpp:=HardwareSerial.cpp WMath.cpp Print.cpp CDC.cpp
 
-avr_core_obj_dir:=$(PROJECT_DIRECTORY)/core
+avr_core_obj_dir:=$(frksky_telemetry_mkfile_dir)/core
 avr_core_cpp_obj:=$(patsubst %.cpp, $(avr_core_obj_dir)/%.o, $(avr_core_src_cpp))
 avr_core_c_obj:=$(patsubst %.c, $(avr_core_obj_dir)/%.o, $(avr_core_src_c))
 
@@ -96,14 +96,20 @@ clean:
 
 frsky_telemetry.hex: /tmp/frsky_telemetry.elf
 	$(AVR_OBJCOPY) -O ihex -R .eeprom $< $@
+	cp frsky_telemetry.hex $(PROJECT_DIRECTORY)/Firmware/
 	
 upload_frsky_telemetry: frsky_telemetry.hex
 	$(AVRDUDE) $(AVRDUDE_FLAGS) $(AVRDUDE_WRITE_FLASH)$<:i
 
-frsky_telemetry.zip: frsky_telemetry.hex
-	git archive -o frsky_telemetry.zip -9 HEAD
+manual:
 	pushd Manual/2_1_x/; pdflatex Manual.tex; popd
-	zip -g frsky_telemetry.zip frsky_telemetry.hex Manual/2_1_x/Manual.pdf
+	mv Manual/2_1_x/Manual.pdf "Quick Start Guide.pdf"
 
+frsky_telemetry.zip: frsky_telemetry.hex manual
+	#
+	pushd $(PROJECT_DIRECTORY); git archive -o frsky_telemetry.zip -9 HEAD; popd
+	zip $(PROJECT_DIRECTORY)/frsky_telemetry.zip -d Firmware/Source/Manual*
+	zip -g $(PROJECT_DIRECTORY)/frsky_telemetry.zip "Quick Start Guide.pdf" 
+	pushd $(PROJECT_DIRECTORY); zip -g frsky_telemetry.zip Firmware/frsky_telemetry.hex; popd
 
 all: upload_frsky_telemetry
