@@ -1,6 +1,7 @@
 frksky_telemetry_mkfile_dir:=$(dir $(lastword $(MAKEFILE_LIST)))
 SHELL = /bin/bash
-PROJECT_DIRECTORY:=$(shell git rev-parse --show-toplevel)/Firmware/Source
+PROJECT_DIRECTORY:=$(shell git rev-parse --show-toplevel)
+SOURCE_DIRECTORY:=$(PROJECT_DIRECTORY)/Firmware/Source
 port:=/dev/ttyUSB0
 upload_speed:=57600
 upload_protocol:=arduino
@@ -67,9 +68,9 @@ $(arduino_static_library): $(avr_core_c_obj) $(avr_core_cpp_obj)
 	$(AVR_AR) rcs $(arduino_static_library) $(avr_core_c_obj) $(avr_core_cpp_obj)
 
 
-frksky_telemetry_src:=$(wildcard $(PROJECT_DIRECTORY)/*.cpp) \
-	$(wildcard $(PROJECT_DIRECTORY)/GCS_Mavlink/*.cpp) \
-	$(wildcard $(PROJECT_DIRECTORY)/SoftwareSerial/*.cpp) \
+frksky_telemetry_src:=$(wildcard $(SOURCE_DIRECTORY)/*.cpp) \
+	$(wildcard $(SOURCE_DIRECTORY)/GCS_Mavlink/*.cpp) \
+	$(wildcard $(SOURCE_DIRECTORY)/SoftwareSerial/*.cpp) \
 
 frksky_telemetry_obj:=$(patsubst %.cpp, %.o, $(frksky_telemetry_src))
 
@@ -79,7 +80,7 @@ frksky_telemetry_obj:=$(patsubst %.cpp, %.o, $(frksky_telemetry_src))
 	$(CC) $(CPPFLAGS) $(ACFLAGS) $(INC_PARAMS) $^ -o $@ 
 
 clean:
-	find $(PROJECT_DIRECTORY) -type f -name "*.d" -o -name "*.o" -o -name "*.a"  \
+	find $(SOURCE_DIRECTORY) -type f -name "*.d" -o -name "*.o" -o -name "*.a"  \
 		-o -name "*.hex" -o -name "*.zip" | xargs rm -f
 
 /tmp/frsky_telemetry.elf: CC:=$(AVR_CC)
@@ -102,12 +103,13 @@ upload_frsky_telemetry: frsky_telemetry.hex
 
 manual:
 	pushd Manual/; pdflatex Manual.tex; popd
-	mv Manual/Manual.pdf "Quick Start Guide.pdf"
+	mv Manual/Manual.pdf $(SOURCE_DIRECTORY)/"Quick Start Guide.pdf"
 
-frsky_telemetry.zip: frsky_telemetry.hex
-	#
+frsky_telemetry.zip: manual frsky_telemetry.hex
 	pushd $(PROJECT_DIRECTORY); git archive -o frsky_telemetry.zip -9 HEAD; popd
-	zip $(PROJECT_DIRECTORY)/frsky_telemetry.zip # -d Firmware/Source/Manual*
-	pushd $(PROJECT_DIRECTORY); zip -g frsky_telemetry.zip Firmware/frsky_telemetry.hex; popd
+	mv $(PROJECT_DIRECTORY)/frsky_telemetry.zip $(SOURCE_DIRECTORY)
+	pushd $(SOURCE_DIRECTORY)
+	zip -g frsky_telemetry.zip frsky_telemetry.hex
+	zip -g frsky_telemetry.zip "Quick Start Guide.pdf"
 
 all: upload_frsky_telemetry
