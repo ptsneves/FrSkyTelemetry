@@ -1,6 +1,6 @@
 frksky_telemetry_mkfile_dir:=$(dir $(lastword $(MAKEFILE_LIST)))
 SHELL = /bin/bash
-PROJECT_DIRECTORY:=$(shell git rev-parse --show-toplevel)
+PROJECT_DIRECTORY:=$(shell git rev-parse --show-toplevel)/Firmware/Source
 port:=/dev/ttyUSB0
 upload_speed:=57600
 upload_protocol:=arduino
@@ -96,7 +96,6 @@ clean:
 
 frsky_telemetry.hex: /tmp/frsky_telemetry.elf
 	$(AVR_OBJCOPY) -O ihex -R .eeprom $< $@
-	cp frsky_telemetry.hex $(PROJECT_DIRECTORY)/Firmware/
 	
 upload_frsky_telemetry: frsky_telemetry.hex
 	$(AVRDUDE) $(AVRDUDE_FLAGS) $(AVRDUDE_WRITE_FLASH)$<:i
@@ -109,7 +108,6 @@ frsky_telemetry.zip: frsky_telemetry.hex manual
 	#
 	pushd $(PROJECT_DIRECTORY); git archive -o frsky_telemetry.zip -9 HEAD; popd
 	zip $(PROJECT_DIRECTORY)/frsky_telemetry.zip -d Firmware/Source/Manual*
-	zip -g $(PROJECT_DIRECTORY)/frsky_telemetry.zip "Quick Start Guide.pdf" 
 	pushd $(PROJECT_DIRECTORY); zip -g frsky_telemetry.zip Firmware/frsky_telemetry.hex; popd
 
 all: upload_frsky_telemetry
