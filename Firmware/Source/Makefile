@@ -101,13 +101,13 @@ upload_frsky_telemetry: frsky_telemetry.hex
 	$(AVRDUDE) $(AVRDUDE_FLAGS) $(AVRDUDE_WRITE_FLASH)$<:i
 
 manual:
-	pushd Manual/2_1_x/; pdflatex Manual.tex; popd
-	mv Manual/2_1_x/Manual.pdf "Quick Start Guide.pdf"
+	pushd Manual/; pdflatex Manual.tex; popd
+	mv Manual/Manual.pdf "Quick Start Guide.pdf"
 
-frsky_telemetry.zip: frsky_telemetry.hex manual
+frsky_telemetry.zip: frsky_telemetry.hex
 	#
 	pushd $(PROJECT_DIRECTORY); git archive -o frsky_telemetry.zip -9 HEAD; popd
-	zip $(PROJECT_DIRECTORY)/frsky_telemetry.zip -d Firmware/Source/Manual*
+	zip $(PROJECT_DIRECTORY)/frsky_telemetry.zip # -d Firmware/Source/Manual*
 	pushd $(PROJECT_DIRECTORY); zip -g frsky_telemetry.zip Firmware/frsky_telemetry.hex; popd
 
 all: upload_frsky_telemetry
