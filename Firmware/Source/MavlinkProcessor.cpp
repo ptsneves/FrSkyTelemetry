@@ -105,7 +105,7 @@ void MavlinkProcessor::receiveTelemetry() {
 			case MAVLINK_MSG_ID_GPS_RAW_INT:   // 24
 				gathered_telemetry.gps_fixtype = mavlink_msg_gps_raw_int_get_fix_type(&msg);// 0 = No GPS, 1 =No Fix, 2 = 2D Fix, 3 = 3D Fix
 				gathered_telemetry.gps_satellites_visible =  mavlink_msg_gps_raw_int_get_satellites_visible(&msg);          // numbers of visible satelites
-				if(gathered_telemetry.gps_fixtype == 3)  {
+				if(gathered_telemetry.gps_fixtype >= 3)  {
 					gathered_telemetry.gps_hdop = mavlink_msg_gps_raw_int_get_eph(&msg);  // hdop * 100
 					gathered_telemetry.gps_latitude = mavlink_msg_gps_raw_int_get_lat(&msg);
 					gathered_telemetry.gps_longitude = mavlink_msg_gps_raw_int_get_lon(&msg);
