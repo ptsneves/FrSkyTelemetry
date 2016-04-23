@@ -106,10 +106,9 @@ manual:
 	mv Manual/Manual.pdf $(SOURCE_DIRECTORY)/"Quick Start Guide.pdf"
 
 frsky_telemetry.zip: manual frsky_telemetry.hex
-	pushd $(PROJECT_DIRECTORY); git archive -o frsky_telemetry.zip -9 HEAD; popd
+	mv frsky_telemetry.hex $(PROJECT_DIRECTORY)/Firmware
+	pushd $(PROJECT_DIRECTORY);	git archive -o frsky_telemetry.zip -9 HEAD;	zip -g frsky_telemetry.zip Firmware/frsky_telemetry.hex;popd
 	mv $(PROJECT_DIRECTORY)/frsky_telemetry.zip $(SOURCE_DIRECTORY)
-	pushd $(SOURCE_DIRECTORY)
-	zip -g frsky_telemetry.zip frsky_telemetry.hex
 	zip -g frsky_telemetry.zip "Quick Start Guide.pdf"
 
 all: upload_frsky_telemetry
