@@ -29,12 +29,12 @@ local function drawTopPanel()
     lcd.drawTimer(lcd.getLastPos() + 10, 1, model.getTimer(0).value, INVERS)
 
     lcd.drawText(lcd.getLastPos() + 10, 1, "TX:", INVERS)
-    lcd.drawNumber(lcd.getLastPos() + 16, 1, getValue("tx-voltage"), 0+PREC1+INVERS)
+    lcd.drawNumber(lcd.getLastPos() + 16, 1, getValue("tx-voltage") *10, 0+PREC1+INVERS)
 
-    lcd.drawText(lcd.getLastPos(), 1, "v", INVERS)
+    lcd.drawText(lcd.getLastPos(), 1, "V", INVERS)
 
-    lcd.drawText(lcd.getLastPos() + 12, 1, "rssi:", INVERS)
-    lcd.drawNumber(lcd.getLastPos() + 10, 1, getValue("rssi"), 0+INVERS)
+    lcd.drawText(lcd.getLastPos() + 12, 1, "RSSI:", INVERS)
+    lcd.drawNumber(lcd.getLastPos() + 10, 1, getValue("RSSI"), 0+INVERS)
 end
 
 local function drawBottomPanel()
@@ -61,7 +61,7 @@ local function run(event)
     for i = messageFirst, messageNext - 1, 1 do
 --            lcd.drawText(1, row * 10 + 2, "abc " .. i .. " " .. messageFirst .. " " .. messageNext, 0)
         lcd.drawText(1, row * 10 + 2, messageArray[(i % MESSAGEBUFFERSIZE) + 1], 0)
-        row = (row + 1) % 5
+        row = (row + 1) % 4
     end
     local coords =  getValue("GPS")
     if (type(coords) == "table") then

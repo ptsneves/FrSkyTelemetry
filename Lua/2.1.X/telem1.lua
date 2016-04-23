@@ -297,7 +297,7 @@ local function drawDistance(x, y)
     lat_dist = lat_dist * lat_dist
     local long_dist = math.abs(arming_coords["lon"] - coords["lon"]) * EARTH_RADIUS
     long_dist = long_dist * long_dist
-    distance = math.sqrt(lat_dist + long_dist + getValue("Alt") * getValue("Alt"))
+    distance = math.sqrt(lat_dist + long_dist + getValue("Alt") * getValue("Alt")) * 10.0
     if distance >= 100.0 then
       distance = distance / 1000.0
       lcd.drawNumber(x + 36, y, distance, MIDSIZE + PREC1)
@@ -388,7 +388,7 @@ local function drawTopPanel()
   lcd.drawTimer(lcd.getLastPos() + 10, 1, model.getTimer(0).value, INVERS)
 
   lcd.drawText(lcd.getLastPos() + 10, 1, "TX:", INVERS)
-  lcd.drawNumber(lcd.getLastPos() + 16, 1, getValue("tx-voltage"), PREC1+INVERS)
+  lcd.drawNumber(lcd.getLastPos() + 16, 1, getValue("tx-voltage") * 10, PREC1+INVERS)
 
   lcd.drawText(lcd.getLastPos(), 1, "V", INVERS)
 
