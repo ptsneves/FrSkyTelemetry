@@ -4,3 +4,4 @@ frsky_telemetry.zip
 core/*.o
 core/*.a
 core/*.d
+*.d
