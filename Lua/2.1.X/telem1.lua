@@ -260,10 +260,10 @@ end
 local function drawSpeed(x,y)
   local speed = getValue("GSpd")
   lcd.drawText(x, y + 5, "Spd", SMLSIZE)
-  lcd.drawNumber(x + 37, y, speed, MIDSIZE)
+  lcd.drawNumber(x + 37, y, speed / 36 * 1000, MIDSIZE)
   local t = lcd.getLastPos() + 1
-  lcd.drawText(t, y, "km", SMLSIZE)
-  lcd.drawText(t, y+5, "hr", SMLSIZE)
+  lcd.drawText(t, y, "m", SMLSIZE)
+  lcd.drawText(t, y+5, "s", SMLSIZE)
 end
 
 local function drawAltitude(x, y)
@@ -297,14 +297,14 @@ local function drawDistance(x, y)
     lat_dist = lat_dist * lat_dist
     local long_dist = math.abs(arming_coords["lon"] - coords["lon"]) * EARTH_RADIUS
     long_dist = long_dist * long_dist
-    distance = math.sqrt(lat_dist + long_dist + getValue("Alt") * getValue("Alt")) * 10.0
+    distance = math.sqrt(lat_dist + long_dist + getValue("Alt") * getValue("Alt"))
     if distance >= 100.0 then
-      distance = distance / 1000.0
+      distance = distance / 100.0
       lcd.drawNumber(x + 36, y, distance, MIDSIZE + PREC1)
       local t = lcd.getLastPos() + 1
       lcd.drawText(t, y + 5, "Km", SMLSIZE)
     else
-      lcd.drawNumber(x + 36, y, distance, MIDSIZE + PREC1)
+      lcd.drawNumber(x + 36, y, distance, MIDSIZE)
       local t = lcd.getLastPos() + 1
       lcd.drawText(t, y + 5, "m", SMLSIZE)
     end

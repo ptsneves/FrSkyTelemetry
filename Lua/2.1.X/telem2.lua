@@ -59,9 +59,8 @@ local function run(event)
     local i
     local row = 1
     for i = messageFirst, messageNext - 1, 1 do
---            lcd.drawText(1, row * 10 + 2, "abc " .. i .. " " .. messageFirst .. " " .. messageNext, 0)
-        lcd.drawText(1, row * 10 + 2, messageArray[(i % MESSAGEBUFFERSIZE) + 1], 0)
-        row = (row + 1) % 4
+        lcd.drawText(1, row * 10, messageArray[(i % MESSAGEBUFFERSIZE) + 1], 0)
+        row = (row % 4) + 1
     end
     local coords =  getValue("GPS")
     if (type(coords) == "table") then
