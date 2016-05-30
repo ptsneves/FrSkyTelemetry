@@ -1,7 +1,4 @@
-frsky_telemetry.hex
-frsky_telemetry.zip
-*.o
-core/*.o
-core/*.a
-core/*.d
-*.d
+**/frsky_telemetry.hex
+**/frsky_telemetry.zip
+**/*.o
+**/*.d
