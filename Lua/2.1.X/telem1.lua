@@ -300,7 +300,7 @@ local function drawDistance(x, y)
     distance = math.sqrt(lat_dist + long_dist + getValue("Alt") * getValue("Alt"))
     if distance >= 100.0 then
       distance = distance / 100.0
-      lcd.drawNumber(x + 36, y, distance, MIDSIZE + PREC1)
+      lcd.drawNumber(x + 36, y, distance, MIDSIZE + PREC2)
       local t = lcd.getLastPos() + 1
       lcd.drawText(t, y + 5, "Km", SMLSIZE)
     else
