@@ -20,7 +20,7 @@ avr_core_src_c:=wiring.c \
 	wiring_analog.c wiring_digital.c \
 	wiring_pulse.c \
 	wiring_shift.c WInterrupts.c
-	
+
 
 avr_core_src_cpp:=HardwareSerial.cpp WMath.cpp Print.cpp CDC.cpp
 
@@ -60,7 +60,7 @@ $(avr_core_obj_dir)/%.o:
 	------> $*.o"
 	@$(AVR_CC) $(AVR_CPPFLAGS) -MMD \
 	$(avr_core_inc) $(arduino_core_directory)$(filter $*.%, $(avr_core_src_cpp) $(avr_core_src_c)) \
-	-o $@ 
+	-o $@
 
 
 $(arduino_static_library): $(avr_core_c_obj) $(avr_core_cpp_obj)
@@ -76,8 +76,8 @@ frksky_telemetry_obj:=$(patsubst %.cpp, %.o, $(frksky_telemetry_src))
 
 %.o: %.cpp
 	@echo "CC $^ ------> $@"
-	
-	$(CC) $(CPPFLAGS) $(ACFLAGS) $(INC_PARAMS) $^ -o $@ 
+
+	$(CC) $(CPPFLAGS) $(ACFLAGS) $(INC_PARAMS) $^ -o $@
 
 clean:
 	find $(SOURCE_DIRECTORY) -type f -name "*.d" -o -name "*.o" -o -name "*.a"  \
@@ -91,14 +91,15 @@ clean:
 	$(CC) $(frksky_telemetry_obj) \
 		$(frksky_telemetry_softwareserial_obj) \
 		$(AVR_LFLAGS) -L$(avr_core_obj_dir) -l$(arduino_static_library_name) \
-		-o $@ 
+		-o $@
 
 #	@$(PRETTY_PRINT)
 
 frsky_telemetry.hex: /tmp/frsky_telemetry.elf
 	$(AVR_OBJCOPY) -O ihex -R .eeprom $< $@
-	
+
 upload_frsky_telemetry: frsky_telemetry.hex
+	md5sum $<
 	$(AVRDUDE) $(AVRDUDE_FLAGS) $(AVRDUDE_WRITE_FLASH)$<:i
 
 manual:

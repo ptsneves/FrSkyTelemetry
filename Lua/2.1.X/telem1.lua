@@ -27,7 +27,7 @@ AsciiMap={}
 
 local function initialize()
   local i
-  for i=1, 17 do
+  for i=1, 21 do
     FlightMode[i] = {}
     FlightMode[i].Name=""
   end
@@ -49,6 +49,10 @@ local function initialize()
   FlightMode[15].Name="Flip Mode"
   FlightMode[16].Name="Auto Tune"
   FlightMode[17].Name="Position Hold"
+  FlightMode[18].Name="Brake"
+  FlightMode[19].Name="Throw"
+  FlightMode[20].Name="Avoid ADSB"
+  FlightMode[21].Name="Guided No GPS"
 
   for i=1,9 do
     Severity[i]={}
@@ -315,7 +319,7 @@ else
 end
 
 local function drawHdop(x,y)
-  local hdop = getValue("A2") * 4 * 255/13.2 / 100
+  local hdop = getValue("A2") * 4 * 255/ 13.2 / 100
   if hdop > 9.9 then
     --hdop = 9.9*10
     lcd.drawText(x-24, y+3, ">", SMLSIZE)

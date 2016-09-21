@@ -1,4 +1,4 @@
-/media/truecrypt1/Projects/FrSkyTelemetry/core/WInterrupts.o: \
+core/WInterrupts.o: \
  /usr/share/arduino/hardware/arduino/cores/arduino/WInterrupts.c \
  /usr/share/arduino/hardware/arduino/cores/arduino/wiring_private.h \
  /usr/share/arduino/hardware/arduino/cores/arduino/Arduino.h \

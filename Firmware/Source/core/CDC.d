@@ -1,5 +1,4 @@
-/media/truecrypt1/Projects/FrSkyTelemetry/core/CDC.o: \
- /usr/share/arduino/hardware/arduino/cores/arduino/CDC.cpp \
+core/CDC.o: /usr/share/arduino/hardware/arduino/cores/arduino/CDC.cpp \
  /usr/share/arduino/hardware/arduino/cores/arduino/Platform.h \
  /usr/share/arduino/hardware/arduino/cores/arduino/Arduino.h \
  /usr/share/arduino/hardware/arduino/cores/arduino/binary.h \

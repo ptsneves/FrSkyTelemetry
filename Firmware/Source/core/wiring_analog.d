@@ -1,4 +1,4 @@
-/media/truecrypt1/Projects/FrSkyTelemetry/core/wiring_analog.o: \
+core/wiring_analog.o: \
  /usr/share/arduino/hardware/arduino/cores/arduino/wiring_analog.c \
  /usr/share/arduino/hardware/arduino/cores/arduino/wiring_private.h \
  /usr/share/arduino/hardware/arduino/cores/arduino/Arduino.h \

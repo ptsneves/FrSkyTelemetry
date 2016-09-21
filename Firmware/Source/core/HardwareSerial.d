@@ -1,4 +1,4 @@
-/media/truecrypt1/Projects/FrSkyTelemetry/core/HardwareSerial.o: \
+core/HardwareSerial.o: \
  /usr/share/arduino/hardware/arduino/cores/arduino/HardwareSerial.cpp \
  /usr/share/arduino/hardware/arduino/cores/arduino/Arduino.h \
  /usr/share/arduino/hardware/arduino/cores/arduino/binary.h \

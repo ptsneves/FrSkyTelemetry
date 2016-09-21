@@ -1,4 +1,4 @@
-/media/truecrypt1/Projects/FrSkyTelemetry/core/wiring_pulse.o: \
+core/wiring_pulse.o: \
  /usr/share/arduino/hardware/arduino/cores/arduino/wiring_pulse.c \
  /usr/share/arduino/hardware/arduino/cores/arduino/wiring_private.h \
  /usr/share/arduino/hardware/arduino/cores/arduino/Arduino.h \

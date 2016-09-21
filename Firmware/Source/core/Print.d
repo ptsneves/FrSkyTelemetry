@@ -1,5 +1,4 @@
-/media/truecrypt1/Projects/FrSkyTelemetry/core/Print.o: \
- /usr/share/arduino/hardware/arduino/cores/arduino/Print.cpp \
+core/Print.o: /usr/share/arduino/hardware/arduino/cores/arduino/Print.cpp \
  /usr/share/arduino/hardware/arduino/cores/arduino/Arduino.h \
  /usr/share/arduino/hardware/arduino/cores/arduino/binary.h \
  /usr/share/arduino/hardware/arduino/cores/arduino/WCharacter.h \

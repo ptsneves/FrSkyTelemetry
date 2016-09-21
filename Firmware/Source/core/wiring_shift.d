@@ -1,4 +1,4 @@
-/media/truecrypt1/Projects/FrSkyTelemetry/core/wiring_shift.o: \
+core/wiring_shift.o: \
  /usr/share/arduino/hardware/arduino/cores/arduino/wiring_shift.c \
  /usr/share/arduino/hardware/arduino/cores/arduino/wiring_private.h \
  /usr/share/arduino/hardware/arduino/cores/arduino/Arduino.h \
