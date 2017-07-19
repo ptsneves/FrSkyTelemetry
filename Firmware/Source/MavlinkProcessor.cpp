@@ -91,7 +91,7 @@ void MavlinkProcessor::receiveTelemetry(Telemetry& gathered_telemetry) {
 					CHECK_CHANGED(gathered_telemetry.system_status, mavlink_msg_heartbeat_get_system_status(&msg), SYSTEM_STATUS);
 					CHECK_CHANGED(gathered_telemetry.mav_type, mavlink_msg_heartbeat_get_type(&msg), SlowParameters::MAV_TYPE);
 					connection_timer = millis();
-					if (!is_connected);
+					if (!is_connected)
 					{
 						heartbeat_count++;
 						if ((heartbeat_count) > 10) { // If  received > 10 heartbeats from MavLink then we are connected
