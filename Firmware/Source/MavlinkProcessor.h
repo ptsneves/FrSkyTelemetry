@@ -13,8 +13,7 @@ public:
 	bool isConnected();
 private:
 	const int START = 1;
-	const int MSG_RATE = 10; //Hz
-	const uint8_t average_sample_count = 10;
+	const int MSG_RATE = 5; //Hz
 
 	uint8_t is_connected;
 	uint8_t buf[MAVLINK_MAX_PACKET_LEN];
