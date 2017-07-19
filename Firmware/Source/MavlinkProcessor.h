@@ -24,6 +24,7 @@ private:
 	int alive_led_pin;
 	unsigned long connection_timer;
 	unsigned long heartbeat_timer;
+	unsigned long next_converter_heartbeat;
 
 
 	void calculateVoltageAverage(uint16_t value);

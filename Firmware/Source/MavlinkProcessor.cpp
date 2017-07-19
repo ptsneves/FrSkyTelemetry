@@ -61,7 +61,8 @@ status {0},
 heartbeat_count {0},
 alive_led_pin {13},
 connection_timer {0},
-heartbeat_timer {millis()}
+heartbeat_timer {millis()},
+next_converter_heartbeat {millis()}
 {
 	MavLinkSerial.begin(57600);
 }
@@ -79,8 +80,16 @@ const unsigned long& MavlinkProcessor::getLastHeartbeat() const {
 	original = newest
 
 void MavlinkProcessor::receiveTelemetry(Telemetry& gathered_telemetry) {
-	uint32_t next_timeout = millis() + 6;
 	tryToConnectToAPM();
+	if (millis() > next_converter_heartbeat) {
+		mavlink_msg_heartbeat_pack(0xFF, 0xBE, &msg, 0, 0, 0, 0, 0);
+		uint16_t len = mavlink_msg_to_send_buffer(buf, &msg);
+		MavLinkSerial.write(buf, len);
+		delay(10);
+		next_converter_heartbeat = millis() + 5000;
+	}
+
+	uint32_t next_timeout = millis() + 6;
 	while(MavLinkSerial.available() && millis() < next_timeout){
 		if (mavlink_parse_char(MAVLINK_COMM_0, MavLinkSerial.read(), &msg, &status)) {
 			switch(msg.msgid) {
