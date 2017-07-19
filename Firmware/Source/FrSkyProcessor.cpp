@@ -104,7 +104,7 @@ void FrSkyProcessor::process(Telemetry& mav_telemetry, bool new_data) {
 				digitalWrite(fault_pin, HIGH);
 			if (data == SENSOR_ID_VARIO) {
 				uint32_t latlong = 0;
-				switch(++variometer_index % 18) {
+				switch(++variometer_index % 13) {
 				case 0:
 					sendPackage(DATA_FRAME, FR_ID_VARIO, mav_telemetry.climb_rate);
 					break;
