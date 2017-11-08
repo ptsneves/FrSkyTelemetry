@@ -102,7 +102,8 @@ void FrSkyProcessor::process(Telemetry& mav_telemetry, bool new_data) {
 		if (lastRx == START_STOP) {
 			if (new_data == true)
 				digitalWrite(fault_pin, HIGH);
-			if (data == SENSOR_ID_VARIO) {
+			if (data == SENSOR_ID_VARIO || data == SENSOR_ID_FAS ||
+				data == SENSOR_ID_GPS) {
 				uint32_t latlong = 0;
 				switch(++variometer_index % 13) {
 				case 0:
@@ -141,19 +142,12 @@ void FrSkyProcessor::process(Telemetry& mav_telemetry, bool new_data) {
 					sendPackage(DATA_FRAME, FR_ID_HEADING, mav_telemetry.heading * 100);
 					break;
 				case 9:
-				{
-					uint16_t data_word;
-					data_word = telem_text_get_word();
-					sendPackage(DATA_FRAME, FR_ID_RPM, data_word);
-				}
-					break;
-				case 10:
 					sendPackage(DATA_FRAME, FR_ID_ROLL, mav_telemetry.roll);
 					break;
-				case 11:
+				case 10:
 					sendPackage(DATA_FRAME, FR_ID_PITCH, mav_telemetry.pitch);
 					break;
-				case 12:
+				case 11:
 				{
 					int16_t hdop_val;
 					hdop_val = mav_telemetry.gps_hdop / 4;
@@ -162,12 +156,17 @@ void FrSkyProcessor::process(Telemetry& mav_telemetry, bool new_data) {
 					sendPackage(DATA_FRAME, FR_ID_ADC2, hdop_val); //  value must be between 0 and 255.  1 produces 0.4
 				}
 					break;
-				case 13:
+				case 12:
 					sendSlowParameters(mav_telemetry);
 					break;
 				default:
 					break;
 				}
+			}
+			else if (data == SENSOR_ID_RPM) {
+				uint16_t data_word;
+				data_word = telem_text_get_word();
+				sendPackage(DATA_FRAME, FR_ID_RPM, data_word);
 			}
 		}
 		lastRx = data;
